@@ -1,0 +1,37 @@
+using Glamreserve.Response;
+
+@page "/reservas/detalle/{id:int}"
+@inject HttpClient Http
+@inject NavigationManager Navigation
+;
+<h3>Detalle de la Reserva</h3>
+
+@if (reserva == null)
+{
+    <p>Cargando detalles...</p>
+}
+else
+{
+    <div>
+        <p><strong>Cliente:</strong> @reserva.ClienteNombre</p>
+        <p><strong>Servicio:</strong> @reserva.ServicioNombre</p>
+        <p><strong>Fecha:</strong> @reserva.FechaHora.ToString("dd/MM/yyyy HH:mm")</p>
+        <p><strong>Estado:</strong> @reserva.Estado</p>
+    </div>
+    <button @onclick="Volver" class="btn btn-secondary">Volver</button>
+}
+
+@code {
+    [Parameter] public int id { get; set; }
+    private ReservaResponse? reserva;
+
+    protected override async Task OnInitializedAsync()
+    {
+        reserva = await Http.GetFromJsonAsync<ReservaResponse>($"api/reservas/{id}");
+    }
+
+    private void Volver()
+    {
+        Navigation.NavigateTo("/reservas");
+    }
+}

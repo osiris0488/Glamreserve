@@ -1,0 +1,44 @@
+@if (isAuthenticated)
+{
+    <button @onclick="Logout">Cerrar Sesión</button>
+}
+else
+{
+    <NavLink href="/login">Iniciar Sesión</NavLink>
+}
+
+@code {
+    private bool isAuthenticated;
+
+    protected override async Task OnInitializedAsync()
+    {
+        isAuthenticated = await AuthService.IsAuthenticated();
+    }
+
+    private async Task Logout()
+    {
+        await AuthService.Logout();
+    }
+}
+@if (isAuthenticated)
+{
+    <button @onclick="Logout">Cerrar Sesión</button>
+}
+else
+{
+    <NavLink href="/login">Iniciar Sesión</NavLink>
+}
+
+@code {
+    private bool isAuthenticated;
+
+    protected override async Task OnInitializedAsync()
+    {
+        isAuthenticated = await AuthService.IsAuthenticated();
+    }
+
+    private async Task Logout()
+    {
+        await AuthService.Logout();
+    }
+}

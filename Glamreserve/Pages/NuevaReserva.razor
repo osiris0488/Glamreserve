@@ -1,0 +1,67 @@
+using Glamreserve.Entities;
+@using Glamreserve.Dtos.Request
+@using System.Net.Http
+@using Microsoft.AspNetCore.Authorization
+
+
+@page "/reservas/nueva"
+@inject HttpClient Http
+@inject NavigationManager Navigation
+
+<h3>Crear Nueva Reserva</h3>
+
+<div>
+    <label>Cliente:</label>
+    <select @bind="reserva.ClienteId" class="form-control">
+        <option value="">Seleccione un cliente</option>
+        @foreach (var cliente in clientes)
+        {
+            <option value="@cliente.Id">@cliente.Nombre</option>
+        }
+    </select>
+</div>
+
+<div>
+    <label>Servicio:</label>
+    <select @bind="reserva.ServicioId" class="form-control">
+        <option value="">Seleccione un servicio</option>
+        @foreach (var servicio in servicios)
+        {
+            <option value="@servicio.Id">@servicio.Nombre - $@servicio.Precio</option>
+        }
+    </select>
+</div>
+
+<div>
+    <label>Fecha y Hora:</label>
+    <input type="datetime-local" @bind="reserva.FechaHora" class="form-control" />
+</div>
+
+<button @onclick="GuardarReserva" class="btn btn-success">Guardar</button>
+<button @onclick="Volver" class="btn btn-secondary">Cancelar</button>
+
+@code {
+    private ReservaRequest reserva = new ReservaRequest();
+    private List<Cliente>? clientes;
+    private List<Servicio>? servicios;
+
+    protected override async Task OnInitializedAsync()
+    {
+        clientes = await Http.GetFromJsonAsync<List<Cliente>>("api/clientes");
+        servicios = await Http.GetFromJsonAsync<List<Servicio>>("api/servicios");
+    }
+
+    private async Task GuardarReserva()
+    {
+        var response = await Http.PostAsJsonAsync("api/reservas", reserva);
+        if (response.IsSuccessStatusCode)
+        {
+            Navigation.NavigateTo("/reservas");
+        }
+    }
+
+    private void Volver()
+    {
+        Navigation.NavigateTo("/reservas");
+    }
+}

@@ -1,0 +1,59 @@
+@page "/reservas"
+@inject HttpClient Http
+using Glamreserve.Dtos.Response;
+
+<h3>Lista de Reservas</h3>
+
+@if (reservas == null)
+{
+    <p>Cargando reservas...</p>
+}
+else
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Cliente</th>
+                <th>Servicio</th>
+                <th>Fecha</th>
+                <th>Estado</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var reserva in reservas)
+            {
+                <tr>
+                    <td>@reserva.ClienteNombre</td>
+                    <td>@reserva.ServicioNombre</td>
+                    <td>@reserva.FechaHora.ToString("dd/MM/yyyy HH:mm")</td>
+                    <td>@reserva.Estado</td>
+                    <td>
+                        <button @onclick="() => VerDetalles(reserva.Id)" class="btn btn-info">Ver</button>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+<button @onclick="IrACrearReserva" class="btn btn-primary">Nueva Reserva</button>
+
+@code {
+    private List<ReservaResponse>? reservas;
+
+    protected override async Task OnInitializedAsync()
+    {
+        reservas = await Http.GetFromJsonAsync<List<ReservaResponse>>("api/reservas");
+    }
+
+    private void IrACrearReserva()
+    {
+        Navigation.NavigateTo("/reservas/nueva");
+    }
+
+    private void VerDetalles(int id)
+    {
+        Navigation.NavigateTo($"/reservas/detalle/{id}");
+    }
+}

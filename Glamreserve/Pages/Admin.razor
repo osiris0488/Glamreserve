@@ -1,0 +1,32 @@
+using Glamreserve.Entities;
+@page "/admin"
+@inject HttpClient Http
+
+<h3>Administración de Clientes y Servicios</h3>
+
+<h4>Clientes</h4>
+<ul>
+    @foreach (var cliente in clientes)
+    {
+        <li>@cliente.Nombre - @cliente.Telefono</li>
+    }
+</ul>
+
+<h4>Servicios</h4>
+<ul>
+    @foreach (var servicio in servicios)
+    {
+        <li>@servicio.Nombre - $@servicio.Precio</li>
+    }
+</ul>
+
+@code {
+    private List<Cliente>? clientes;
+    private List<Servicio>? servicios;
+
+    protected override async Task OnInitializedAsync()
+    {
+        clientes = await Http.GetFromJsonAsync<List<Cliente>>("api/clientes");
+        servicios = await Http.GetFromJsonAsync<List<Servicio>>("api/servicios");
+    }
+}

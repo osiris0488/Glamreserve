@@ -1,3 +1,28 @@
-﻿@page "/"
+﻿@page "/reservas"
+@inject HttpClient Http
+@attribute [Authorize]
 
-<h1>Hello, world!</h1>
+
+<h3>Reservas</h3>
+
+<button @onclick="HacerReserva">Hacer una Reserva</button>
+
+@code {
+    private async Task HacerReserva()
+    {
+        var request = new ReservaRequest
+        {
+            ClienteId = 1,
+            ServicioId = 2,
+            FechaHora = DateTime.Now.AddDays(1)
+        };
+
+        var response = await Http.PostAsJsonAsync("api/reservas", request);
+        if (response.IsSuccessStatusCode)
+        {
+            var reserva = await response.Content.ReadFromJsonAsync<ReservaResponse>();
+            Console.WriteLine($"Reserva creada con ID: {reserva?.Id}");
+        }
+    }
+}
+
