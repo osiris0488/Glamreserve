@@ -1,7 +1,7 @@
 ﻿@page "/reservas"
+@using Microsoft.AspNetCore.Authorization
 @inject HttpClient Http
 @attribute [Authorize]
-
 
 <h3>Reservas</h3>
 
@@ -25,4 +25,3 @@
         }
     }
 }
-

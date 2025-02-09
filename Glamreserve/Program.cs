@@ -12,11 +12,15 @@ builder.Services.AddDbContext<AppDbContext>(options =>
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+builder.Services.AddAuthorization();
 
 var app = builder.Build();
 
 app.UseSwagger();
 app.UseSwaggerUI();
+
+app.UseAuthentication();
+app.UseAuthorization();
 
 app.UseAuthorization();
 app.MapControllers();
@@ -41,11 +45,5 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
 		};
 	});
 
-builder.Services.AddAuthorization();
-
-var app = builder.Build();
-
-app.UseAuthentication();
-app.UseAuthorization();
 
 

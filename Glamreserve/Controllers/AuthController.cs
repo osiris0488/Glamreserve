@@ -4,17 +4,22 @@ using System.Security.Claims;
 using System.Text;
 using Microsoft.IdentityModel.Tokens;
 using System;
-using Glamreserve.Pages.LoginRequest;
+using Glamreserve.Models;
+using Glamreserve.Services; 
 
 [Route("api/auth")]
 [ApiController]
 public class AuthController : ControllerBase
 {
 	private readonly IConfiguration _config;
+	private readonly IUserService _userService;
+	private readonly ITokenService _tokenService;
 
-	public AuthController(IConfiguration config)
+	public AuthController(IConfiguration config, IUserService userService, ITokenService tokenService)
 	{
 		_config = config;
+		_userService = userService;
+		_tokenService = tokenService;
 	}
 
 	[HttpPost("login")]
@@ -24,7 +29,7 @@ public class AuthController : ControllerBase
 		if (user == null)
 		{
 			return Unauthorized(new { message = "Credenciales incorrectas" });
-		};
+		}
 
 		var token = _tokenService.GenerateToken(user);
 		return Ok(new LoginResponse
@@ -34,6 +39,7 @@ public class AuthController : ControllerBase
 			Email = user.Email,
 			Rol = user.Rol
 		});
+	}
 
 	private string GenerateJwtToken(string username)
 	{
@@ -55,5 +61,3 @@ public class AuthController : ControllerBase
 		return new JwtSecurityTokenHandler().WriteToken(token);
 	}
 }
-
-

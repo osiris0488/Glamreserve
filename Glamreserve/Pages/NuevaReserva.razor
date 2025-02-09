@@ -1,12 +1,12 @@
-using Glamreserve.Entities;
+@page "/reservas/nueva"
+@using Glamreserve.Entities
 @using Glamreserve.Dtos.Request
 @using System.Net.Http
+@using System.Net.Http.Json
 @using Microsoft.AspNetCore.Authorization
-
-
-@page "/reservas/nueva"
 @inject HttpClient Http
 @inject NavigationManager Navigation
+
 
 <h3>Crear Nueva Reserva</h3>
 
